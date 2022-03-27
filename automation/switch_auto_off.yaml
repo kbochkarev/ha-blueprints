@@ -1,0 +1,45 @@
+blueprint:
+  name: Switch auto off
+  description: Turn off switch/plug when device conected to it is off .
+  domain: automation
+  source_url: https://github.com/kbochkarev/ha-blueprints/blob/main/automation/switch_auto_off.yaml
+  input:
+    device_entity:
+      name: Device
+      description: Binary sensor representing device with states On/Off
+      selector:
+        entity:
+          domain: binary_sensor
+    switch_entity:
+      name: Switch
+      description: Socket into which device is plugged or switch connected to it.
+      selector:
+        entity:
+          domain: switch
+    auto_off_delay:
+      name: Wait time
+      description: Time in seconds to leave the switch on after device got off.
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 3600
+          unit_of_measurement: seconds
+# If device turned on withing interval, we restart the script.
+mode: restart
+max_exceeded: silent
+trigger:
+  platform: state
+  entity_id: !input device_entity
+  from: "off"
+  to: "on"
+action:
+  - wait_for_trigger:
+      platform: state
+      entity_id: !input device_entity
+      from: "on"
+      to: "off"
+  - delay: !input auto_off_delay
+  - service: switch.turn_off
+    data:
+      entity_id: !input switch_entity

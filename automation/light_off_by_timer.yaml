@@ -2,7 +2,7 @@ blueprint:
   name: Light off by timer
   description: Turn off light when timer is finished
   domain: automation
-  source_url:
+  source_url: https://github.com/kbochkarev/ha-blueprints/blob/main/automation/light_off_by_timer.yaml
   input: 
     light_entity:
       name: Light

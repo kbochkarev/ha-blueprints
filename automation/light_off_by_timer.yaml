@@ -3,20 +3,17 @@ blueprint:
   description: Turn off light when timer is finished
   domain: automation
   source_url: https://github.com/kbochkarev/ha-blueprints/blob/main/automation/light_off_by_timer.yaml
-  input: 
+  input:
     light_entity:
       name: Light
       selector:
-        target:
-          entity:
-            domain: light
+        entity:
+          domain: light
     timer_entity:
       name: Timer
       selector:
-        target:
-          entity:
-            domain: timer
-
+        entity:
+          domain: timer
 mode: single
 max_exceeded: silent
 trigger:
@@ -28,8 +25,9 @@ condition:
   - alias: Light is on
     condition: state
     entity_id: !input light_entity
-    state: "on"
+    state: 'on'
 action:
   - alias: Turn off light
     service: light.turn_off
-    target: !input light_entity
+    target: 
+      entity_id: !input light_entity

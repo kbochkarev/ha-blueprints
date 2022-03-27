@@ -1,0 +1,36 @@
+blueprint:
+  name: Light off by timer
+  description: Turn off light when timer is finished
+  domain: automation
+  source_url:
+  input: 
+    light_entity:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    timer_entity:
+      name: Timer
+      selector:
+        target:
+          entity:
+            domain: timer
+
+mode: single
+max_exceeded: silent
+trigger:
+  - event_type: timer.finished
+    platform: event
+    event_data:
+      entity_id: !input timer_entity
+condition:
+  - alias: Light is on
+    condition: state
+    entity_id: !input light_entity
+    state: "on"
+action:
+  - alias: Turn off light
+    service: light.turn_off
+    target:
+      entity_id: !input light_entity
